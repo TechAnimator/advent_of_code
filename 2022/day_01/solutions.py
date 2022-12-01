@@ -21,15 +21,11 @@ def sort_calories():
     return sorted_elves
 
 
-def part_one():
-    sorted_elves = sort_calories()
-    highest_total = max(sorted_elves)
-
-    return highest_total
+def part_one(sorted_elves):
+    return max(sorted_elves)
 
 
-def part_two():
-    sorted_elves = sort_calories()
+def part_two(sorted_elves):
     highest_total = max(sorted_elves)
     sorted_elves.remove(highest_total)
     second_highest_total = max(sorted_elves)
@@ -38,8 +34,11 @@ def part_two():
 
     return sum((highest_total, second_highest_total, third_highest_total))
 
-highest_total = part_one()
-print(highest_total)
 
-three_highest_totals = part_two()
-print(three_highest_totals)
+if __name__ == "__main__":
+    sorted_elves = sort_calories()
+    highest_total = part_one(sorted_elves)
+    three_highest_totals = part_two(sorted_elves)
+
+    print(highest_total)
+    print(three_highest_totals)
