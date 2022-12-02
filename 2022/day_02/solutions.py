@@ -43,8 +43,10 @@ POINTS = {
 
 
 def rps_shoot():
-    input = Path(__file__).parent.joinpath("input.txt").read_text().split("\n")
-    rounds = [round.split(" ") for round in input if len(input)]
+    rounds = [
+        round.split(" ")
+        for round in Path(__file__).parent.joinpath("input.txt").read_text().split("\n")
+    ]
 
     part_one_total = calculate_score(rounds)
     part_two_total = calculate_score(rounds, is_part_two=True)
