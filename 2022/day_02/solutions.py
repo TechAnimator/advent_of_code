@@ -41,14 +41,16 @@ POINTS = {
     "Loss": 0,
 }
 
+
 def rps_shoot():
     input = Path(__file__).parent.joinpath("input.txt").read_text().split("\n")
     rounds = [round.split(" ") for round in input if len(input)]
-    
+
     part_one_total = calculate_score(rounds)
     part_two_total = calculate_score(rounds, is_part_two=True)
 
     return part_one_total, part_two_total
+
 
 def calculate_score(rounds, is_part_two=False):
     """ """
@@ -58,11 +60,12 @@ def calculate_score(rounds, is_part_two=False):
         me = round[1]
         if is_part_two:
             me = SHAPE_CODEC[me][opponent]
-        result = (WTL_CODEC[opponent][me])
+        result = WTL_CODEC[opponent][me]
         round_total = POINTS[me] + POINTS[result]
         total += round_total
-    
+
     return total
+
 
 if __name__ == "__main__":
     part_one_total, part_two_total = rps_shoot()
