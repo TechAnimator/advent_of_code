@@ -12,26 +12,30 @@ def get_input():
 
 def scan_datastream():
     """ """
+    # Convert the string into a list
     datastream = [*get_input()]
-
-    for idx, letter in enumerate(datastream):
-        if idx > 2:
+    
+    # Iterate through the datastream, using the index of each letter to assess in groups of 4/14
+    part_one = None
+    part_two = None
+    for idx in range(len(datastream)):
+        if idx > 2 and not part_one: # Start assesing after the 3rd letter, once there is a full group of 4
             set_of_four = set(datastream[idx-3:idx+1])
             list_of_four = datastream[idx-3:idx+1]
             if len(set_of_four) == len(list_of_four):
                 part_one = idx + 1
-                break
-    for idx, letter in enumerate(datastream):
-        if idx > 12:
+        if idx > 12 and not part_two: # Start assesing after the 13th letter, once there is a full group of 14
             set_of_fourteen = set(datastream[idx-13:idx+1])
             list_of_fourteen = datastream[idx-13:idx+1]
             if len(set_of_fourteen) == len(list_of_fourteen):
                 part_two = idx + 1
-                break
-    
+        if part_one and part_two:
+            break
+
     return part_one, part_two
 
 if __name__ == "__main__":
     part_one, part_two = scan_datastream()
     print("Part 1: {}".format(part_one))
     print("Part 2: {}".format(part_two))
+
