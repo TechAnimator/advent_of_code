@@ -11,7 +11,11 @@ def get_input():
 
 
 def scan_datastream():
-    """ """
+    """Scans the datastream and iterates through it as a list to find the first group without duplicate letters.
+    
+    Returns:
+        int, int: Number of characters part one, Number of characters part two
+    """
     # Convert the string into a list
     datastream = [*get_input()]
     
@@ -34,8 +38,8 @@ def scan_datastream():
 
     return part_one, part_two
 
+
 if __name__ == "__main__":
     part_one, part_two = scan_datastream()
     print("Part 1: {}".format(part_one))
     print("Part 2: {}".format(part_two))
-
