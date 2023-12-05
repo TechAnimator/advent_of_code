@@ -41,7 +41,9 @@ def convert_words_to_numbers(line):
 
 
 def do_it(input, convert_words=False):
-    '''Part one of the puzzle. Parse each line to create two digit numbers from integers in each string that need to be added all together to find the answer.
+    '''Run both part 1 and 2 in the same loop.
+    Parse each line to create two digit numbers from integers in each string that need to be added all together to find the answer.
+    For part 2, run the line through the "convert_words_to_numbers" method to grab the nececssary added values for each line.
     
     Args:
         input (list): Input for the puzzle sorted as lines (str) in a list.
