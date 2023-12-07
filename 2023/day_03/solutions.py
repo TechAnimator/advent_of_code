@@ -12,16 +12,23 @@ def get_input():
 
 
 def do_it(input):
-    """Part 1.
-    Parse all lines to store numbers and symbols first to store all information.
+    """Parse all lines to store numbers and symbols first to store all information.
+    Store gear specific locations from the list of symbol locations.
+    
+    Part 1.
     Go through stored data to cross check lines with each other to find all the numbers that are next to a symbol.
     Line by line, add any applicable numbers to the total that gets returned at the end of the process.
+
+    Part 2.
+    Go through all the gear locations on each line to find adject numbers on the previous, current, and next line.
+    Store all pairs of numbers found next to a gear and add the product of each pair to the total that gets returned.
 
     Args:
         input (list): Input for the puzzle sorted as lines (str) in a list.
 
     Returns:
         int: Total of all the numbers that are next to a symbol.
+        int: Total of all the products of pairs of numbers that are next to a gear.
     """
     stored_data = dict()
     for line_idx, line in enumerate(input):
@@ -51,32 +58,61 @@ def do_it(input):
     part_two_total = 0
 
     for line_number in range(data_length):
+
+        """ PART ONE """
         all_symbols = list()
-        all_gears = list()
 
         if line_number != 0: # Add the symbol locations from the previous line for the 2nd line and beyond
             all_symbols.extend(stored_data[line_number-1]["symbols"])
-            all_gears.extend(stored_data[line_number-1]["gears"])
         if line_number != data_length - 1: # Add the symbol locations from the next line up until the last line
             all_symbols.extend(stored_data[line_number+1]["symbols"])
-            all_gears.extend(stored_data[line_number+1]["gears"])
         all_symbols.extend(stored_data[line_number]["symbols"]) # Add the symbols locations from the current line
-        all_gears.extend(stored_data[line_number]["gears"]) # Add the symbols locations from the current line
-
+        
         all_symbols.sort() # Unnecessary but I like a sorted list of numbers
-        all_gears.sort()
-
-        gear_data = dict()
         
         # Go through all the numbers in the current line and cross check with the symbols from the previous, current, and next
         # lines to see what numbers are applicable to the puzzle prompt and next to a symbol
-        for idx, data in stored_data[line_number]["numbers"].items():
+        current_line = stored_data[line_number]["numbers"]
+        for idx, data in current_line.items():
             next_to_symbol = any(data["range"][0] <= symbol < data["range"][1] for symbol in all_symbols)
             if next_to_symbol:
                 part_one_total += data["number"]
 
-        for gear in all_gears:
-            print(line_number, gear)
+        """ PART TWO """
+        # Store the previous line and next line of numbers.
+        # If it's the first line, set "previous_line" to None. If it's the last line, set "next_line" to None.
+        # For this puzzle we don't need to set previous and next lines to None for the start and end since the neither the first
+        # or last line has a * symbol in them, but it's good practice to account for this.
+        if line_number > 0:
+            previous_line = stored_data[line_number-1]["numbers"]
+        else:
+            previous_line = None
+        if line_number < data_length-1:
+            next_line = stored_data[line_number+1]["numbers"]
+        else:
+            next_line = None
+
+        # Iterate over all gears found in the current line.
+        # Store any adjacent parts (numbers) found in the last, current, and next lines in a list.
+        for gear in stored_data[line_number]["gears"]:
+            parts = []
+            if previous_line:
+                for part in previous_line.values():
+                    if gear in range(part["range"][0], part["range"][1]):
+                        parts.append(part)
+            for part in current_line.values():
+                if gear in range(part["range"][0], part["range"][1]):
+                    parts.append(part)
+            if next_line:
+                for part in next_line.values():
+                    if gear in range(part["range"][0], part["range"][1]):
+                        parts.append(part)
+            
+            # If there are 2 parts, the numbers that make up that part are applicable to the solution.
+            # Multiply the 2 parts for the "ratio" (product) and add that number to the total sum.
+            if len(parts) == 2:
+                ratio = parts[0]["number"] * parts[1]["number"]
+                part_two_total += ratio
 
     return part_one_total, part_two_total
 
