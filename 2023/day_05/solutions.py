@@ -31,10 +31,36 @@ def do_it(input):
         elif source_category:
             almanac_data["maps"][source_category].append(line)
 
+    all_ranges = dict()
     for key, value in almanac_data.items():
         if key == "maps":
-            for sub_key, sub_value in value.items():
-                print(sub_key)
+            for map_type, sub_value in value.items():
+                all_ranges[map_type] = list()
+                for values in sub_value:
+                    range_key = dict()
+                    if values[0]:
+                        for idx in range(int(values[2])):
+                            range_key[int(values[1]) + idx] = int(values[0]) + idx
+                        all_ranges[map_type].append(range_key)
+
+    for seed in almanac_data["seeds"]:
+        seed_number = int(seed)
+        print("Start: ", seed_number)
+
+        for map_type, ranges in all_ranges.items():
+            for range_conversion in ranges:
+                if seed_number in range_conversion:
+                    seed_number = range_conversion[seed_number]
+                    if map_type == "fertilizer-to-water":
+                        print(range_conversion)
+                        print(seed_number)
+            print(map_type, seed_number)
+        # for location_conversion in location_range_list:
+        #     if seed_number in location_conversion:
+        #         if seed_number < location_conversion[seed_number]:
+        #             seed_number = location_conversion[seed_number]
+        print("End: ", seed_number)
+        print()
 
     return None, None
 
