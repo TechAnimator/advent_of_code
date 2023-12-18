@@ -1,5 +1,7 @@
 from pathlib import Path
 import re
+import datetime
+import time
 
 
 def get_input():
@@ -25,31 +27,25 @@ def do_it(input, part_two=False):
         line = line.split(" ")
         if "seeds:" in line:
             seeds = list(map(int, line[1:]))
-
-            # This code seems to work for the example data but it is very slow and needs a pass for speed for the actual input.
-            # seeds = seeds
-            # if part_two:
-            #     seeds = [(i, j) for i, j in zip(seeds[::2], seeds[1::2])]
-            #     new_seeds = []
-            #     for pair in seeds:
-            #         new_seeds.append(pair[0])
-            #         new_seeds.extend(range(pair[0]+1, pair[0]+pair[1]))
-            #     seeds = new_seeds
-
         elif "map:" in line:
             source_category = line[0]
             almanac_data["maps"][source_category] = []
         elif source_category and len(line) > 1:
             numbers = list(map(int, line))
-            almanac_data["maps"][source_category].append((numbers[0], (numbers[1], numbers[1]+numbers[2])))
+            number_ranges = (range(numbers[0], numbers[0]+numbers[2]+1), (range(numbers[1], numbers[1]+numbers[2]+1)))
+            almanac_data["maps"][source_category].append(number_ranges)
     
     lowest_location = None
     for seed_number in seeds:
-        for source_category, data in almanac_data["maps"].items():
-            for numbers in data:
-                if seed_number in range(numbers[1][0], numbers[1][1]):
-                    seed_number = (seed_number - numbers[1][0]) + numbers[0]
+        for source_category, ranges in almanac_data["maps"].items():
+            for num_range in ranges:
+                dest_range = num_range[0]
+                source_range = num_range[1]
+                if seed_number in source_range:
+                    idx = source_range.index(seed_number)
+                    seed_number = dest_range[idx]
                     break
+                
         if not lowest_location or (seed_number < lowest_location):
             lowest_location = seed_number
         
@@ -58,7 +54,14 @@ def do_it(input, part_two=False):
 
 if __name__ == "__main__":
     input = get_input()
+    
+    part_one_start_time = time.time()
     part_one = do_it(input)
-    part_two = do_it(input, part_two=True)
-    print("Part 1:", part_one)
-    print("Part 2:", part_two)
+    part_one_end_time = time.time()
+
+    part_two_start_time = time.time()
+    part_two = do_it(input, part_two=False)
+    part_two_end_time = time.time()
+
+    print("\nPart 1:", part_one, "\nElapsed Time: ", part_one_end_time - part_one_start_time)
+    print("\nPart 2:", part_two, "\nElapsed Time: ", part_two_end_time - part_two_start_time)
