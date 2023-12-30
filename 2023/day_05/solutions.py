@@ -68,7 +68,6 @@ def do_it(input, part_two=False):
             else:
                 humidities.append(location_number)
             
-            lowest_location = None
             for source_number in humidities:
                 for source_category, map_ranges in reversed(almanac_data["maps"].items()):
                     if not source_category == "humidity-to-location":
@@ -80,12 +79,9 @@ def do_it(input, part_two=False):
                                     break
                             except:
                                 pass
-                    if source_category == "seed-to-soil":
-                        for seed_range in seeds:
-                            if source_number in seed_range:
-                                if not lowest_location or lowest_location > location_number:
-                                    lowest_location = location_number
-                                    return lowest_location
+                for seed_range in seeds:
+                    if source_number in seed_range:
+                        return location_number
         
     return lowest_location
 
