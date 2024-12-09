@@ -11,6 +11,12 @@ def get_input():
 
 
 def safe_check(numbers):
+    '''Take in a list of numbers and check to see if they are ascending in order, then descending if not. If the numbers are in
+    sequential order either way, check to make sure all numbers are within 3 of the number before and after in the list.
+
+    Returns:
+        bool
+    '''
     sequence_check = all(i < j for i, j in zip(numbers, numbers[1:]))
 
     if not sequence_check:
@@ -21,6 +27,12 @@ def safe_check(numbers):
 
 
 def problem_dampener(numbers):
+    '''Take in a list of numbers and loops through each one, removing it and running safe_check each time. Returns True if safe_check
+    passes at any time.
+
+    Returns:
+        bool
+    '''
     for i in range(len(numbers)):
         new_numbers = list(numbers)
         new_numbers.pop(i)
@@ -30,30 +42,30 @@ def problem_dampener(numbers):
 
 
 def do_it():
-    '''Run both part 1 and 2 in the same call. Store the two numbers from each line into separate lists then sort both lists.
+    '''Run both part 1 and 2 in the same call. Store the string of numbers from each line into a list.
     
     For part 1:
-    Pair the two lists and find the difference between each unique pair, adding the value of the difference to the total.
+    Run safe_check and if it returns True, add 1 to safe_counter.
     
     For part 2:
-    Iterate through each number in list a, then multiply the number of occurrences in list b by the number itself.
+    If safe_check returned False, run the numbers through problem_dampener and if it returns True, add 1 to unsafe_to_safe_counter.
 
     Returns:
-        int, int: Total distance (part 1 answer), similarity score (part 2 answer)
+        int, int: Nunmber of safe reports (part 1 answer), Number of new safe reports (part 2 answer)
     '''
     input = get_input()
     
     safe_counter = 0
-    fixed_counter = 0
+    unsafe_to_safe_counter = 0
     for line in input:
         numbers = list(map(int, line.split()))
         if safe_check(numbers):
             safe_counter += 1
         else:
             if problem_dampener(numbers):
-                fixed_counter += 1
+                unsafe_to_safe_counter += 1
 
-    return safe_counter, safe_counter + fixed_counter
+    return safe_counter, safe_counter + unsafe_to_safe_counter
 
 
 if __name__ == '__main__':
