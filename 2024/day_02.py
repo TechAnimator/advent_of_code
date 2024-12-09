@@ -21,7 +21,12 @@ def safe_check(numbers):
 
 
 def problem_dampener(numbers):
-    return
+    for i in range(len(numbers)):
+        new_numbers = list(numbers)
+        new_numbers.pop(i)
+        is_safe = safe_check(new_numbers)
+        if is_safe:
+            return is_safe
 
 
 def do_it():
@@ -45,7 +50,8 @@ def do_it():
         if safe_check(numbers):
             safe_counter += 1
         else:
-            problem_dampener(numbers)
+            if problem_dampener(numbers):
+                fixed_counter += 1
 
     return safe_counter, safe_counter + fixed_counter
 
