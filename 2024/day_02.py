@@ -14,28 +14,34 @@ def safe_check(numbers):
     '''Take in a list of numbers and check to see if they are ascending in order, then descending if not. If the numbers are in
     sequential order either way, check to make sure all numbers are within 3 of the number before and after in the list.
 
+    Args:
+        input (list): Numbers from a single line in the input.
+
     Returns:
         bool
     '''
-    sequence_check = all(i < j for i, j in zip(numbers, numbers[1:]))
+    sequence_check = all(number_a < number_b for number_a, number_b in zip(numbers, numbers[1:]))
 
     if not sequence_check:
-        sequence_check = all(i > j for i, j in zip(numbers, numbers[1:]))
+        sequence_check = all(number_a > number_b for number_a, number_b in zip(numbers, numbers[1:]))
     
     if sequence_check:
-        return all(abs(i-j) < 4 for i, j in zip(numbers, numbers[1:]))
+        return all(abs(number_a - number_b) < 4 for number_a, number_b in zip(numbers, numbers[1:]))
 
 
 def problem_dampener(numbers):
     '''Take in a list of numbers and loops through each one, removing it and running safe_check each time. Returns True if safe_check
     passes at any time.
 
+    Args:
+        input (list): Numbers from a single line in the input.
+
     Returns:
         bool
     '''
-    for i in range(len(numbers)):
+    for idx in range(len(numbers)):
         new_numbers = list(numbers)
-        new_numbers.pop(i)
+        new_numbers.pop(idx)
         is_safe = safe_check(new_numbers)
         if is_safe:
             return is_safe
